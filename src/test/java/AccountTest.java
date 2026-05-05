@@ -40,6 +40,60 @@ public class AccountTest {
         assertFalse(email.contains("@"), "Geçersiz mail formatı!");
     }
 
+    // --- YENI 7 TEST SENARYOSU ---
+
+    @Test
+    void testNameWithSpecialCharacters() {
+        // Senaryo 4: İsim özel karakter içermemeli (Equivalence Partitioning)
+        Account account = new Account("Umut!", "Sar", "test@mail.com", "Sifre123", LocalDate.of(1995, 5, 5));
+        assertFalse(account.isValid(), "Özel karakter içeren isimler geçersiz sayılmalı.");
+    }
+
+    @Test
+    void testSurnameEmpty() {
+        // Senaryo 5: Soyad alanı boş bırakılamaz (Boundary Value Analysis)
+        Account account = new Account("Umut", "", "test@mail.com", "Sifre123", LocalDate.of(1995, 5, 5));
+        assertFalse(account.isValid(), "Boş soyad girişi reddedilmeli.");
+    }
+
+    @Test
+    void testEmailWithoutDomain() {
+        // Senaryo 6: Email uzantısı (.com, .net vb.) eksik durumu (Equivalence Partitioning)
+        Account account = new Account("Umut", "Sar", "umutsar@gmail", "Sifre123", LocalDate.of(1995, 5, 5));
+        assertFalse(account.isValid(), "Uzantısı eksik email geçersiz olmalı.");
+    }
+
+    @Test
+    void testPasswordWithoutNumber() {
+        // Senaryo 7: Şifre en az bir rakam içermeli (Equivalence Partitioning)
+        Account account = new Account("Umut", "Sar", "test@mail.com", "SadeceHarf", LocalDate.of(1995, 5, 5));
+        assertFalse(account.isValid(), "Rakam içermeyen şifre geçersiz sayılmalı.");
+    }
+
+    @Test
+    void testBirthDateExactlyToday() {
+        // Senaryo 8: Doğum tarihi bugün olan bir kullanıcı (Boundary Value Analysis)
+        // Not: Sistemin 18 yaş sınırı varsa bu test assertFalse dönmelidir.
+        Account account = new Account("Umut", "Sar", "test@mail.com", "Sifre123", LocalDate.now());
+        assertFalse(account.isValid(), "Bugün doğan bir kullanıcı (0 yaş) sisteme kayıt olamamalı.");
+    }
+
+    @Test
+    void testNameMaximumLength() {
+        // Senaryo 9: İsim alanının çok uzun olması (Boundary Value Analysis - Örn: 50+ karakter)
+        String longName = "A".repeat(51);
+        Account account = new Account(longName, "Sar", "test@mail.com", "Sifre123", LocalDate.of(1995, 5, 5));
+        assertFalse(account.isValid(), "Aşırı uzun isimler sistem sınırlarını aşmalı.");
+    }
+
+    @Test
+    @DisplayName("Valid User - International Characters")
+    void testValidUserWithTurkishCharacters() {
+        // Senaryo 10: Türkçe karakter desteği (Equivalence Partitioning - Geçerli Durum)
+        Account account = new Account("Şahin", "Öztürk", "sahin@mail.com", "Sifre123", LocalDate.of(1990, 10, 10));
+        assertTrue(account.isValid(), "Türkçe karakter içeren geçerli bilgiler kabul edilmeli.");
+    }
+
     @AfterEach
     void tearDown() {
         // Her testten sonra temizlik
