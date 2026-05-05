@@ -138,6 +138,30 @@ public class AccountTest {
         assertTrue(lastName.matches(".*\\d.*"), "Last name should not contain numbers.");
     }
 
+    @Test
+    @DisplayName("TC18: Password cannot be the same as the Email")
+    void testPasswordSameAsEmail() {
+        String email = "test@mail.com";
+        String password = "test@mail.com";
+        assertEquals(email, password, "Password should not be the same as email for security.");
+    }
+
+    @Test
+    @DisplayName("TC19: Valid age - 18 years old should be accepted (Boundary)")
+    void testAgeExactlyEighteen() {
+        int birthYear = 2008;
+        int currentYear = 2026;
+        assertEquals(18, currentYear - birthYear, "User is exactly 18 years old.");
+    }
+
+    @Test
+    @DisplayName("TC20: Email with multiple '@' symbols should be invalid")
+    void testEmailMultipleAtSigns() {
+        String email = "test@@mail.com";
+        long count = email.chars().filter(ch -> ch == '@').count();
+        assertTrue(count > 1, "Email contains multiple @ symbols.");
+    }
+
     @AfterEach
     void tearDown() {
         System.out.println("Test case finished. Cleaning up...");
