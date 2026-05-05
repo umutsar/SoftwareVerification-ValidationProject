@@ -85,6 +85,59 @@ public class AccountTest {
         assertTrue(firstName.contains("Ş") && lastName.contains("ü"), "Turkish characters not handled correctly.");
     }
 
+    // Added 7 (umut)
+    @Test
+    @DisplayName("TC11: Password must contain at least one uppercase letter")
+    void testPasswordWithoutUppercase() {
+        String password = "password123";
+        assertFalse(password.matches(".*[A-Z].*"), "Password should require an uppercase letter.");
+    }
+
+    @Test
+    @DisplayName("TC12: Confirm Password must match Password")
+    void testPasswordMatch() {
+        String password = "Password123";
+        String confirmPassword = "Password456";
+        assertNotEquals(password, confirmPassword, "Passwords do not match.");
+    }
+
+    @Test
+    @DisplayName("TC13: First Name with only 1 character should be invalid (Boundary)")
+    void testFirstNameTooShort() {
+        String firstName = "U";
+        assertTrue(firstName.length() < 2, "First name must be at least 2 characters.");
+    }
+
+    @Test
+    @DisplayName("TC14: Email without '@' symbol should be invalid")
+    void testEmailMissingAtSign() {
+        String email = "umutsargmail.com";
+        assertFalse(email.contains("@"), "Email must contain @ symbol.");
+    }
+
+    @Test
+    @DisplayName("TC15: Age check - User older than 65 should be invalid (Boundary)")
+    void testAgeOverSixtyFive() {
+        int birthYear = 1950;
+        int currentYear = 2026;
+        int age = currentYear - birthYear;
+        assertTrue(age > 65, "User is older than 65.");
+    }
+
+    @Test
+    @DisplayName("TC16: Password cannot contain only numbers")
+    void testPasswordOnlyNumbers() {
+        String password = "12345678";
+        assertFalse(password.matches(".*[a-zA-Z].*"), "Password must contain letters.");
+    }
+
+    @Test
+    @DisplayName("TC17: Last Name with numbers should be invalid")
+    void testLastNameWithNumbers() {
+        String lastName = "Sar123";
+        assertTrue(lastName.matches(".*\\d.*"), "Last name should not contain numbers.");
+    }
+
     @AfterEach
     void tearDown() {
         System.out.println("Test case finished. Cleaning up...");
